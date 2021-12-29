@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弹幕美化</title>
+    <style type="text/css">
+        .normal {
+            width: 800px;
+            height: 30px;
+            background: #66ccff;
+            border: 1px solid #333;
+            border-radius: 10px;
+            line-height: 30px;
+            opacity: 0.5;
+            position: absolute;
+            top: 10px;
+        }
+    </style>
+</head>
+<script>
+    const movingElem = [];
+    function addMovingElem(elem) {
+        movingElem.length += 1
+        movingElem[movingElem.length - 1] = elem
+    }
+    function removeMovingElem(elem) {
+        for (let i = 0; i < movingElem.length; i++) {
+            if (movingElem[i] === elem) {
+                elem[i] = elem[elem.length - 1];
+                elem.length = elem.length - 1;
+                break;
+            }
+        }
+    }
+    function containsMovingElem(elem) {
+        for (let i = 0; i < movingElem.length; i++) {
+            if (movingElem[i] === elem) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function moveY(elem, step, repeat) {
+        addMovingElem(elem);
+        moveY0(elem, step, repeat, -1);
+    }
+    function moveY0(elem, step, repeat, times) {
+        let nowTimes = times + 1;
+        if (nowTimes < repeat) {
+            document.getElementById(elem).style.top = document.getElementById(elem).offsetTop + step + "px"
+            setTimeout("moveY0(" + elem + "," + step + "," + repeat + "," + nowTimes + ")", 1);
+        } else {
+            removeMovingElem(elem);
+            removeElem(elem)
+        }
+    }
+    function removeElem(elem) {
+        if (document.getElementById(elem).style.opacity === "") document.getElementById(elem).style.opacity = "0.5";
+        if (parseFloat(document.getElementById(elem).style.opacity) < 0.02) {
+            document.getElementById("mainbody").removeChild(document.getElementById(elem));
+        } else {
+            document.getElementById(elem).style.opacity = (parseFloat(document.getElementById(elem).style.opacity) - 0.01).toString();
+            setTimeout("removeElem(" + elem + ")", 1);
+        }
+    }
+</script>
+<body>
+<div id="mainbody">
+    <div class="normal" id="1">&nbsp;&nbsp;啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊 | 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</div>
+</div>
+<script>
+    moveY("1", 1, 500)
+</script>
+</body>
+</html>
