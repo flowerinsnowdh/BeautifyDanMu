@@ -43,6 +43,7 @@
     let max;
     let elemList;
     let file;
+    let lastRead;
 
     function init(aFile) {
         movingElem = [];
@@ -50,6 +51,7 @@
         max = 0;
         elemList = [];
         file = aFile;
+        lastRead = new Date().getTime();
     }
 
     function addMovingElem(elem) {
@@ -187,6 +189,14 @@
             for (let i = 0; i < split.length; i++) {
                 let current = split[i];
                 let index = current.indexOf(",");
+                let time = current.substr(0, index);
+
+                if (parseInt(time) < lastRead) {
+                    return;
+                }
+
+                current = current.substr(index + 1);
+                index = current.indexOf(",");
                 let mode = current.substr(0, index);
 
                 current = current.substr(index + 1);
@@ -207,6 +217,7 @@
                     addNewElem(2, sender, content);
                 }
             }
+            lastRead = new Date().getTime();
         }
     }
 
