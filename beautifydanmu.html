@@ -13,21 +13,55 @@
             line-height: 30px;
             opacity: 0.5;
             position: absolute;
+        }
+        .gift {
+            width: 800px;
+            height: 30px;
+            background: #ff4500;
+            border: 1px solid #333;
+            border-radius: 10px;
+            line-height: 30px;
+            opacity: 0.5;
+            position: absolute;
+        }
+        .join {
+            width: 370px;
+            height: 30px;
+            background: #adff2f;
+            border: 1px solid #333;
+            border-radius: 10px;
+            line-height: 30px;
+            opacity: 0.5;
+            position: absolute;
             top: 10px;
         }
     </style>
 </head>
 <script>
-    const movingElem = [];
+    let movingElem;
+    let space;
+    let max;
+    let elemList;
+    let file;
+
+    function init(aFile) {
+        movingElem = [];
+        space = document.getElementById("space").innerText;
+        max = 0;
+        elemList = [];
+        file = aFile;
+    }
+
     function addMovingElem(elem) {
         movingElem.length += 1
         movingElem[movingElem.length - 1] = elem
     }
     function removeMovingElem(elem) {
         for (let i = 0; i < movingElem.length; i++) {
-            if (movingElem[i] === elem) {
-                elem[i] = elem[elem.length - 1];
-                elem.length = elem.length - 1;
+            // noinspection EqualityComparisonWithCoercionJS
+            if (movingElem[i] == elem) {
+                movingElem[i] = movingElem[movingElem.length - 1];
+                movingElem.length = movingElem.length - 1;
                 break;
             }
         }
@@ -41,6 +75,40 @@
         return false;
     }
 
+    function addElemList(elem) {
+        elemList.length += 1
+        elemList[elemList.length - 1] = elem
+    }
+    function removeElemList(elem) {
+        for (let i = 0; i < elemList.length; i++) {
+            // noinspection EqualityComparisonWithCoercionJS
+            if (elemList[i] == elem) {
+                elemList[i] = elemList[elemList.length - 1];
+                elemList.length = elemList.length - 1;
+                break;
+            }
+        }
+    }
+    function containsElemList(elem) {
+        for (let i = 0; i < elemList.length; i++) {
+            if (elemList[i] === elem) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function sortElemList() {
+        for (let a = 0; a < elemList.length; a++) {
+            for (let b = 0; b < elemList.length - 1; b++) {
+                if (parseInt(elemList[b]) > parseInt(elemList[b + 1])) {
+                    let c = elemList[b];
+                    elemList[b] = elemList[b + 1];
+                    elemList[b + 1] = c;
+                }
+            }
+        }
+    }
+
     function moveY(elem, step, repeat) {
         addMovingElem(elem);
         moveY0(elem, step, repeat, -1);
@@ -52,25 +120,114 @@
             setTimeout("moveY0(" + elem + "," + step + "," + repeat + "," + nowTimes + ")", 1);
         } else {
             removeMovingElem(elem);
-            removeElem(elem)
         }
     }
     function removeElem(elem) {
         if (document.getElementById(elem).style.opacity === "") document.getElementById(elem).style.opacity = "0.5";
         if (parseFloat(document.getElementById(elem).style.opacity) < 0.02) {
             document.getElementById("mainbody").removeChild(document.getElementById(elem));
+            removeElemList(elem);
+            sortElemList();
         } else {
             document.getElementById(elem).style.opacity = (parseFloat(document.getElementById(elem).style.opacity) - 0.01).toString();
             setTimeout("removeElem(" + elem + ")", 1);
         }
     }
+    // type: 1=normal 2=gift 3=join
+    function addNewElem(type, sender, content) {
+        max++;
+        let at = 680 - (elemList.length * 40);
+        if (type === 1) {
+            let elem = document.createElement("div");
+            elem.className = "normal";
+            elem.id = max.toString();
+            elem.innerText = space + space + sender + " | " + content;
+            elem.style.top = at + "px";
+            document.getElementById("mainbody").appendChild(elem);
+        } else if (type === 2) {
+            let elem = document.createElement("div");
+            elem.className = "gift";
+            elem.id = max.toString();
+            elem.innerText = space + space + sender + " | 赠送了礼物 " + content;
+            elem.style.top = at + "px";
+            document.getElementById("mainbody").appendChild(elem);
+        } else if (type === 3) {
+            let elem = document.createElement("div");
+            elem.className = "join";
+            elem.id = max.toString();
+            elem.innerText = space + space + sender + " | 进入直播间";
+            elem.style.top = at + "px";
+            document.getElementById("mainbody").appendChild(elem);
+        }
+        addElemList(max.toString());
+        sortElemList()
+        setTimeout("removeElem(" + max.toString() + ")", 5000);
+    }
+
+    function moveToLocation() {
+        for (let i = 0; i < elemList.length; i++) {
+            let shouldAt = 680 - (i * 40);
+            let nowAt = document.getElementById(elemList[i]).offsetTop;
+            if (shouldAt !== nowAt && !containsMovingElem(elemList[i])) {
+                moveY(elemList[i], 1, shouldAt - nowAt);
+            }
+        }
+    }
+
+    function keepMove() {
+        moveToLocation();
+        setTimeout("keepMove()", 100);
+    }
+
+    function readFile() {
+        let reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = function() {
+            let split = this.result.split("\n")
+            for (let i = 0; i < split.length; i++) {
+                let current = split[i];
+                let index = current.indexOf(",");
+                let mode = current.substr(0, index);
+
+                current = current.substr(index + 1);
+                index = current.indexOf(",");
+                let sender = current.substr(0, index);
+                if (mode === "3") {
+                    addNewElem(3, sender);
+                    return;
+                }
+
+                let content = current.substr(index + 1);
+
+                if (mode === "1") {
+                    addNewElem(1, sender, content);
+                    return;
+                }
+                if (mode === "2") {
+                    addNewElem(2, sender, content);
+                }
+            }
+        }
+    }
+
+    function keepRead() {
+        readFile();
+        setTimeout("keepRead()", 1000);
+    }
 </script>
 <body>
 <div id="mainbody">
-    <div class="normal" id="1">&nbsp;&nbsp;啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊 | 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</div>
+    <p style="display: none" id="space">&nbsp;</p>
+    <input type="file" id="files" onchange="fileImport()">
 </div>
 <script>
-    moveY("1", 1, 500)
+    function fileImport() {
+        let selectedFile = document.getElementById('files').files[0];
+        document.getElementById("mainbody").removeChild(document.getElementById("files"));
+        init(selectedFile);
+        keepRead();
+        keepMove();
+    }
 </script>
 </body>
 </html>
