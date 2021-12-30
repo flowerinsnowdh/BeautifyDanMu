@@ -1,0 +1,11 @@
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\beautifydanmu.dll
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\beautifydanmu.pdb
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\BilibiliDM_PluginFramework.dll
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\Newtonsoft.Json.dll
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\BilibiliDM_PluginFramework.xml
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\bin\Debug\Newtonsoft.Json.xml
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\obj\Debug\beautifydanmu.csproj.AssemblyReference.cache
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\obj\Debug\beautifydanmu.csproj.CoreCompileInputs.cache
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\obj\Debug\beautifydanmu.csproj.CopyComplete
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\obj\Debug\beautifydanmu.dll
+A:\workspace\HTML\BeautifyDanMu\beautifydanmu\beautifydanmu\obj\Debug\beautifydanmu.pdb
