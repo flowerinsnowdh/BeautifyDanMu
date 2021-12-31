@@ -33,7 +33,26 @@
             line-height: 30px;
             opacity: 0.5;
             position: absolute;
-            top: 10px;
+        }
+        .follow {
+            width: 370px;
+            height: 30px;
+            background: #ff1493;
+            border: 1px solid #333;
+            border-radius: 10px;
+            line-height: 30px;
+            opacity: 0.5;
+            position: absolute;
+        }
+        .share {
+            width: 370px;
+            height: 30px;
+            background: #ff00ff;
+            border: 1px solid #333;
+            border-radius: 10px;
+            line-height: 30px;
+            opacity: 0.5;
+            position: absolute;
         }
     </style>
 </head>
@@ -159,6 +178,18 @@
             elem.innerText = space + space + sender + " | 进入直播间";
             elem.style.top = at + "px";
             document.getElementById("mainbody").appendChild(elem);
+        } else if (type === 4) {
+            let elem = document.createElement("div");
+            elem.className = "follow";
+            elem.id = max.toString();
+            elem.innerText = space + space + sender + " | 关注直播间";
+            elem.style.top = at + "px";
+        } else if (type === 5) {
+            let elem = document.createElement("div");
+            elem.className = "share";
+            elem.id = max.toString();
+            elem.innerText = space + space + sender + " | 分享直播间";
+            elem.style.top = at + "px";
         }
         addElemList(max.toString());
         sortElemList()
@@ -191,6 +222,10 @@
                 current = current.substr(index + 1);
                 if (mode == "3") {
                     addNewElem(3, current, "null");
+                } else if (mode == "4") {
+                    addNewElem(4, current, "null");
+                } else if (mode == "5") {
+                    addNewElem(5, current, "null");
                 } else {
                     index = current.indexOf(",");
                     let sender = current.substr(0, index);

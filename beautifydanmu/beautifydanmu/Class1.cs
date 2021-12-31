@@ -17,7 +17,7 @@ namespace beautifydanmu
             this.PluginAuth = "冬花ice";
             this.PluginName = "弹幕界面和美化";
             this.PluginCont = "flowerimsnow@hotmail.com";
-            this.PluginVer = "1-Pre-1";
+            this.PluginVer = "1-Rel-1";
             this.PluginDesc = "通过HTML显示美化的弹幕";
         }
         private void Class1_ReceivedRoomCount(object sender, BilibiliDM_PluginFramework.ReceivedRoomCountArgs e)
@@ -38,6 +38,20 @@ namespace beautifydanmu
             } else if (e.Danmaku.MsgType == MsgTypeEnum.Welcome || e.Danmaku.MsgType == MsgTypeEnum.WelcomeGuard)
             {
                 SendToLocalServer("3," + e.Danmaku.UserName);
+            } else if (e.Danmaku.MsgType == MsgTypeEnum.Interact)
+            {
+                if (e.Danmaku.InteractType == InteractTypeEnum.Enter)
+                {
+                    SendToLocalServer("3," + e.Danmaku.UserName);                    
+                } else if (e.Danmaku.InteractType == InteractTypeEnum.Follow ||
+                           e.Danmaku.InteractType == InteractTypeEnum.MutualFollow ||
+                           e.Danmaku.InteractType == InteractTypeEnum.SpecialFollow)
+                {
+                    SendToLocalServer("4," + e.Danmaku.UserName);
+                } else if (e.Danmaku.InteractType == InteractTypeEnum.Share)
+                {
+                    SendToLocalServer("5," + e.Danmaku.UserName);
+                }
             }
         }
 
